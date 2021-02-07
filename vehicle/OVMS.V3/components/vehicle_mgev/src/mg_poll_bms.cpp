@@ -176,11 +176,18 @@ void OvmsVehicleMgEv::IncomingBmsPoll(
                         StandardMetrics.ms_v_charge_state->SetValue("topoff");
                     }
                 }
-                
-                // Save SOC for display
+
                 StandardMetrics.ms_v_bat_soc->SetValue(scaledSoc);
-                // Ideal range set to SoC percentage of 262 km (WLTP Range)
-                StandardMetrics.ms_v_bat_range_ideal->SetValue(262 * (scaledSoc / 100));
+                if (m_type == MG5)
+                {
+                    // Ideal range set to SoC percentage of 344 km (WLTP Range)
+                    StandardMetrics.ms_v_bat_range_ideal->SetValue(344 * (scaledSoc / 100));
+                }
+                else
+                {
+                    // Ideal range set to SoC percentage of 262 km (WLTP Range)
+                    StandardMetrics.ms_v_bat_range_ideal->SetValue(262 * (scaledSoc / 100));
+                }
             }
             break;
         case bmsStatusPid:
@@ -239,8 +246,14 @@ float OvmsVehicleMgEv::calculateSoc(uint16_t value)
     int lowerlimit;
     int upperlimit;
     
+    if (m_type == MG5)
+    {
+        //TM From observations, Car Dash SoC reading is:
+        // (soc*1.0887)-4.886
+        return (value * 1.0887) - 4.886;
+    }
     // Setup upper and lower limits from selection on features page
-    if (MyConfig.GetParamValueBool("xmg", "updatedbmu", true))
+    else if (MyConfig.GetParamValueBool("xmg", "updatedbmu", true))
     {
         //New BMU firmware DoD range 25 - 940
         lowerlimit = 25;
