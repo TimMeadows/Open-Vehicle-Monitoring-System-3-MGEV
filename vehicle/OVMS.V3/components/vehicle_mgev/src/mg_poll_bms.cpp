@@ -194,7 +194,15 @@ void OvmsVehicleMgEv::IncomingBmsPoll(
             StandardMetrics.ms_v_bat_soh->SetValue(value / 100.0);
             break;
         case bmsRangePid:
-            StandardMetrics.ms_v_bat_range_est->SetValue(value / 10.0);
+            // Need to adjust for New BMS on UK Vehicles
+            if (MyConfig.GetParamValueInt("xmg", "bmsval") == 2)
+            {
+                StandardMetrics.ms_v_bat_range_est->SetValue(value);
+            }
+            else
+            {
+                StandardMetrics.ms_v_bat_range_est->SetValue(value / 10.0);
+            }
             break;
     }
 }
@@ -240,7 +248,7 @@ float OvmsVehicleMgEv::calculateSoc(uint16_t value)
     int upperlimit;
     
     // Setup upper and lower limits from selection on features page
-    if (MyConfig.GetParamValueBool("xmg", "updatedbmu", true))
+    if (MyConfig.GetParamValueInt("xmg", "bmsval") != 0)
     {
         //New BMU firmware DoD range 25 - 940
         lowerlimit = 25;
