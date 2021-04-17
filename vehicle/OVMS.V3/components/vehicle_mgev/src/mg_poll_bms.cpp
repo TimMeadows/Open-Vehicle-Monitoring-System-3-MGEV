@@ -31,6 +31,7 @@
 
 #include "ovms_log.h"
 static const char *TAG = "v-mgev";
+
 #include "vehicle_mgev.h"
 #include "mg_obd_pids.h"
 #include "metrics_standard.h"
@@ -180,10 +181,13 @@ void OvmsVehicleMgEv::IncomingBmsPoll(
                 }
 
                 StandardMetrics.ms_v_bat_soc->SetValue(scaledSoc);
+                
                 if (m_type == MG5)
                 {
                     // Ideal range set to SoC percentage of 344 km (WLTP Range)
-                    StandardMetrics.ms_v_bat_range_ideal->SetValue(344 * (scaledSoc / 100));
+                    //StandardMetrics.ms_v_bat_range_ideal->SetValue(344 * (scaledSoc / 100));
+                    //TM updated 17 April 2021 based on Observations of Normal mode & HVAC on
+                    StandardMetrics.ms_v_bat_range_ideal->SetValue((1.95 * scaledSoc) - 4.53);
                 }
                 else
                 {
@@ -255,7 +259,7 @@ float OvmsVehicleMgEv::calculateSoc(uint16_t value)
         // Updated Calc 17/4/2021
         // Reimplemented the /10 to get correct scale of SOC
         // (soc*1.09) -4.769 
-        ESP_LOGV(TAG, "IncomingSOC: %i , CalculatedSOC: %.2f", value, ((value/10) * 1.09) - 4.76);
+        ESP_LOGV(TAG, "IncomingSOC: %i , CalculatedSOC: %.2f", value, ((value/10.0f) * 1.09) - 4.76);
         return ((value/10) * 1.09) - 4.76;
     }
     // Setup upper and lower limits from selection on features page
