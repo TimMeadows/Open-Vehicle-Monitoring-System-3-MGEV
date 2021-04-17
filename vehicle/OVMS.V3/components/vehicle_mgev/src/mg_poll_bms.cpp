@@ -250,7 +250,10 @@ float OvmsVehicleMgEv::calculateSoc(uint16_t value)
     {
         //TM From observations, Car Dash SoC reading is:
         // (soc*1.0887)-4.886
-        return (value * 1.0887) - 4.886;
+        // Updated Calc 17/4/2021
+        // Reimplemented the /10 to get correct scale of SOC
+        // (soc*1.09) -4.769 
+        return ((value/10) * 1.09) - 4.76;
     }
     // Setup upper and lower limits from selection on features page
     else if (MyConfig.GetParamValueBool("xmg", "updatedbmu", true))
