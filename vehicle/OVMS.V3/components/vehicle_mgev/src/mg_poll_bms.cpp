@@ -29,6 +29,8 @@
 ; THE SOFTWARE.
 */
 
+#include "ovms_log.h"
+static const char *TAG = "v-mgev";
 #include "vehicle_mgev.h"
 #include "mg_obd_pids.h"
 #include "metrics_standard.h"
@@ -253,6 +255,7 @@ float OvmsVehicleMgEv::calculateSoc(uint16_t value)
         // Updated Calc 17/4/2021
         // Reimplemented the /10 to get correct scale of SOC
         // (soc*1.09) -4.769 
+        ESP_LOGV(TAG, "IncomingSOC: %i , CalculatedSOC: %.2f", value, ((value/10) * 1.09) - 4.76);
         return ((value/10) * 1.09) - 4.76;
     }
     // Setup upper and lower limits from selection on features page
