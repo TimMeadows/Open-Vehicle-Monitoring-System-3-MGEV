@@ -187,7 +187,7 @@ void OvmsVehicleMgEv::IncomingBmsPoll(
                     // Ideal range set to SoC percentage of 344 km (WLTP Range)
                     //StandardMetrics.ms_v_bat_range_ideal->SetValue(344 * (scaledSoc / 100));
                     //TM updated 17 April 2021 based on Observations of Normal mode & HVAC on
-                    StandardMetrics.ms_v_bat_range_ideal->SetValue((1.95 * scaledSoc) - 4.53);
+                    StandardMetrics.ms_v_bat_range_ideal->SetValue(((1.95 * scaledSoc) - 4.53) * 1.60934);
                 }
                 else
                 {
