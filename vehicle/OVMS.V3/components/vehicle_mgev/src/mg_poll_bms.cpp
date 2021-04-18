@@ -188,6 +188,8 @@ void OvmsVehicleMgEv::IncomingBmsPoll(
                     //StandardMetrics.ms_v_bat_range_ideal->SetValue(344 * (scaledSoc / 100));
                     //Set Ideal Range to the observed values for Eco Mode with HVAC on. 
                     StandardMetrics.ms_v_bat_range_ideal->SetValue(((2.06 * (value / 10.0f)) - 5.14) * 1.60934);
+                    //Set Estimated Range to the observed values for Normal Mode with HVAC on. 
+                    StandardMetrics.ms_v_bat_range_est->SetValue(((1.95 * (value / 10.0f)) - 4.53) * 1.60934);
                 }
                 else
                 {
@@ -209,8 +211,7 @@ void OvmsVehicleMgEv::IncomingBmsPoll(
         case bmsRangePid:
             if (m_type == MG5)
             {
-                //Set Estimated Range to the observed values for Normal Mode with HVAC on. 
-                StandardMetrics.ms_v_bat_range_est->SetValue(((1.95 * (value / 10.0f)) - 4.53) * 1.60934);
+                //Do nothing - setting Estimated Range based on SoC
             }
             else
             {
