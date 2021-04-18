@@ -186,8 +186,8 @@ void OvmsVehicleMgEv::IncomingBmsPoll(
                 {
                     // Ideal range set to SoC percentage of 344 km (WLTP Range)
                     //StandardMetrics.ms_v_bat_range_ideal->SetValue(344 * (scaledSoc / 100));
-                    //TM updated 17 April 2021 based on Observations of Normal mode & HVAC on
-                    StandardMetrics.ms_v_bat_range_ideal->SetValue(((1.95 * scaledSoc) - 4.53) * 1.60934);
+                    //Set Ideal Range to the observed values for Eco Mode with HVAC on. 
+                    StandardMetrics.ms_v_bat_range_ideal->SetValue(((2.06 * (value / 10.0f)) - 5.14) * 1.60934);
                 }
                 else
                 {
@@ -207,7 +207,15 @@ void OvmsVehicleMgEv::IncomingBmsPoll(
             StandardMetrics.ms_v_bat_soh->SetValue(value / 100.0);
             break;
         case bmsRangePid:
-            StandardMetrics.ms_v_bat_range_est->SetValue(value / 10.0);
+            if (m_type == MG5)
+            {
+                //Set Estimated Range to the observed values for Normal Mode with HVAC on. 
+                StandardMetrics.ms_v_bat_range_est->SetValue(((1.95 * (value / 10.0f)) - 4.53) * 1.60934);
+            }
+            else
+            {
+                StandardMetrics.ms_v_bat_range_est->SetValue(value / 10.0);
+            }
             break;
     }
 }
